@@ -31,6 +31,9 @@
     .status-badge.done    { background: #ECFDF5; color: #059669; }
     .status-badge.pending { background: #FEF9C3; color: #B45309; }
 
+    .delete-btn { background: #DC2626; color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; font-weight: 500; transition: background 0.2s; flex-shrink: 0; }
+    .delete-btn:hover { background: #B91C1C; }
+
     .footer { padding: 12px 1.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; align-items: center; }
     .footer span { font-size: 12px; color: #9CA3AF; }
   </style>
@@ -93,6 +96,12 @@
     renderTodos();
   }
 
+  async function deleteTodo(id) {
+    await fetch(`/todos/${id}`, { method: 'DELETE' });
+    todos = todos.filter(t => t.id !== id);
+    renderTodos();
+  }
+
   function renderTodos() {
     const list = document.getElementById('todo-list');
     const count = document.getElementById('task-count');
@@ -107,6 +116,7 @@
         <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${todo.id})" />
         <span class="todo-text">${todo.text}</span>
         <span class="status-badge ${todo.done ? 'done' : 'pending'}">${todo.done ? 'done' : 'pending'}</span>
+        <button class="delete-btn" onclick="deleteTodo(${todo.id})">Delete</button>
       </li>
     `).join('');
   }
