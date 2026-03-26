@@ -129,7 +129,7 @@
       <li class="todo-item ${todo.done ? 'done' : ''}" id="todo-${todo.id}">
         <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${todo.id})" />
         <span class="todo-text">${todo.text}</span>
-        <span class="priority-badge ${todo.priority}">${todo.priority}</span>
+        <span class="priority-badge ${todo.priority || 'medium'}">${(todo.priority || 'medium').charAt(0).toUpperCase() + (todo.priority || 'medium').slice(1)}</span>
         <span class="status-badge ${todo.done ? 'done' : 'pending'}">${todo.done ? 'done' : 'pending'}</span>
         <button class="delete-btn" onclick="deleteTodo(${todo.id})">Delete</button>
       </li>
