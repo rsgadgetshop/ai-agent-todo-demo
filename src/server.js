@@ -7,9 +7,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // In-memory todo store (simple for demo)
 let todos = [
-  { id: 1, text: 'Buy groceries',           done: true  },
-  { id: 2, text: 'Prepare demo for seniors', done: false },
-  { id: 3, text: 'Review pull requests',     done: false }
+  { id: 1, text: 'Buy groceries',           done: true,  priority: 'low' },
+  { id: 2, text: 'Prepare demo for seniors', done: false, priority: 'high' },
+  { id: 3, text: 'Review pull requests',     done: false, priority: 'medium' }
 ];
 let nextId = 4;
 
@@ -20,9 +20,9 @@ app.get('/todos', (req, res) => {
 
 // POST add todo
 app.post('/todos', (req, res) => {
-  const { text } = req.body;
+  const { text, priority = 'medium' } = req.body;
   if (!text) return res.status(400).json({ error: 'text is required' });
-  const todo = { id: nextId++, text, done: false };
+  const todo = { id: nextId++, text, done: false, priority };
   todos.push(todo);
   res.status(201).json(todo);
 });
