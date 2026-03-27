@@ -6,28 +6,69 @@
   <title>My Todo App</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F3F4F6; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F3F4F6; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; transition: background 0.3s; }
+    body.dark { background: #1F2937; }
 
-    .app { background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; }
+    .app { background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; transition: background 0.3s, box-shadow 0.3s; }
+    body.dark .app { background: #374151; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
 
     .header { background: #4F46E5; padding: 1.2rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
     .header h1 { color: white; font-size: 1.1rem; font-weight: 600; }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
     .task-count { background: rgba(255,255,255,0.2); color: white; font-size: 12px; padding: 3px 10px; border-radius: 20px; }
+    
+    .dark-mode-toggle { display: flex; align-items: center; gap: 8px; }
+    .dark-mode-toggle label { color: white; font-size: 12px; cursor: pointer; }
+    .toggle-switch { position: relative; width: 40px; height: 20px; background: rgba(255,255,255,0.3); border-radius: 20px; cursor: pointer; transition: background 0.3s; }
+    .toggle-switch.active { background: rgba(255,255,255,0.7); }
+    .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.3s; }
+    .toggle-switch.active::after { transform: translateX(20px); }
 
-    .add-section { padding: 1rem 1.5rem; border-bottom: 1px solid #F3F4F6; display: flex; gap: 8px; }
-    .add-section input { flex: 1; border: 1px solid #E5E7EB; border-radius: 8px; padding: 9px 12px; font-size: 14px; outline: none; transition: border-color 0.2s; }
-    .add-section input:focus { border-color: #4F46E5; }
-    .add-section select { border: 1px solid #E5E7EB; border-radius: 8px; padding: 9px 12px; font-size: 14px; outline: none; transition: border-color 0.2s; background: white; cursor: pointer; }
-    .add-section select:focus { border-color: #4F46E5; }
+    .search-section { padding: 1rem 1.5rem; border-bottom: 1px solid #F3F4F6; }
+    body.dark .search-section { border-bottom-color: #4B5563; }
+    .search-input { width: 100%; border: 1px solid #E5E7EB; border-radius: 8px; padding: 9px 12px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    body.dark .search-input { background: #4B5563; border-color: #6B7280; color: white; }
+    .search-input:focus { border-color: #4F46E5; }
+    .search-input::placeholder { color: #9CA3AF; }
+    body.dark .search-input::placeholder { color: #D1D5DB; }
+
+    .stats-section { padding: 1rem 1.5rem; border-bottom: 1px solid #F3F4F6; display: flex; justify-content: space-around; }
+    body.dark .stats-section { border-bottom-color: #4B5563; }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 18px; font-weight: 600; color: #4F46E5; }
+    body.dark .stat-number { color: #818CF8; }
+    .stat-label { font-size: 11px; color: #6B7280; text-transform: uppercase; font-weight: 500; }
+    body.dark .stat-label { color: #9CA3AF; }
+
+    .add-section { padding: 1rem 1.5rem; border-bottom: 1px solid #F3F4F6; }
+    body.dark .add-section { border-bottom-color: #4B5563; }
+    .add-form { display: flex; flex-direction: column; gap: 8px; }
+    .add-form-row { display: flex; gap: 8px; }
+    .add-section input, .add-section select { border: 1px solid #E5E7EB; border-radius: 8px; padding: 9px 12px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    body.dark .add-section input, body.dark .add-section select { background: #4B5563; border-color: #6B7280; color: white; }
+    .add-section input { flex: 1; }
+    .add-section input:focus, .add-section select:focus { border-color: #4F46E5; }
+    .add-section select { background: white; cursor: pointer; }
+    body.dark .add-section select { background: #4B5563; }
     .add-section button { background: #4F46E5; color: white; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
     .add-section button:hover { background: #4338CA; }
+    .date-input { min-width: 140px; }
 
     .todo-list { list-style: none; }
     .todo-item { display: flex; align-items: center; gap: 12px; padding: 12px 1.5rem; border-bottom: 1px solid #F9FAFB; transition: background 0.15s; }
+    body.dark .todo-item { border-bottom-color: #4B5563; }
     .todo-item:hover { background: #FAFAFA; }
+    body.dark .todo-item:hover { background: #4B5563; }
     .todo-item input[type="checkbox"] { width: 17px; height: 17px; accent-color: #4F46E5; cursor: pointer; flex-shrink: 0; }
-    .todo-item .todo-text { flex: 1; font-size: 14px; color: #1F2937; }
+    .todo-content { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .todo-item .todo-text { font-size: 14px; color: #1F2937; }
+    body.dark .todo-item .todo-text { color: #F3F4F6; }
     .todo-item.done .todo-text { text-decoration: line-through; color: #9CA3AF; }
+    body.dark .todo-item.done .todo-text { color: #6B7280; }
+    .todo-due-date { font-size: 12px; color: #6B7280; }
+    body.dark .todo-due-date { color: #9CA3AF; }
+    .todo-due-date.overdue { color: #DC2626; font-weight: 500; }
+    body.dark .todo-due-date.overdue { color: #F87171; }
 
     .priority-badge { font-size: 11px; padding: 2px 9px; border-radius: 20px; font-weight: 500; flex-shrink: 0; text-transform: uppercase; }
     .priority-badge.high { background: #FEE2E2; color: #DC2626; }
@@ -42,7 +83,12 @@
     .delete-btn:hover { background: #B91C1C; }
 
     .footer { padding: 12px 1.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; align-items: center; }
+    body.dark .footer { border-top-color: #4B5563; }
     .footer span { font-size: 12px; color: #9CA3AF; }
+    body.dark .footer span { color: #6B7280; }
+
+    .no-todos { text-align: center; padding: 2rem; color: #9CA3AF; font-style: italic; }
+    body.dark .no-todos { color: #6B7280; }
   </style>
 </head>
 <body>
@@ -50,52 +96,114 @@
 
   <div class="header">
     <h1>My Todo App</h1>
-    <span class="task-count" id="task-count">0 tasks</span>
+    <div class="header-right">
+      <span class="task-count" id="task-count">0 tasks</span>
+      <div class="dark-mode-toggle">
+        <label for="dark-toggle">🌙</label>
+        <div class="toggle-switch" id="dark-toggle" onclick="toggleDarkMode()"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <input type="text" class="search-input" id="search-input" placeholder="Search todos..." onkeyup="filterTodos()" />
+  </div>
+
+  <div class="stats-section">
+    <div class="stat-item">
+      <div class="stat-number" id="pending-count">0</div>
+      <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="completed-stat">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="total-count">0</div>
+      <div class="stat-label">Total</div>
+    </div>
   </div>
 
   <div class="add-section">
-    <input type="text" id="todo-input" placeholder="Add a new task..." />
-    <select id="priority-select">
-      <option value="low">Low</option>
-      <option value="medium" selected>Medium</option>
-      <option value="high">High</option>
-    </select>
-    <button onclick="addTodo()">Add</button>
+    <div class="add-form">
+      <div class="add-form-row">
+        <input type="text" id="todo-input" placeholder="Add a new task..." />
+        <input type="date" id="due-date-input" class="date-input" />
+      </div>
+      <div class="add-form-row">
+        <select id="priority-select">
+          <option value="low">Low Priority</option>
+          <option value="medium" selected>Medium Priority</option>
+          <option value="high">High Priority</option>
+        </select>
+        <button onclick="addTodo()">Add Task</button>
+      </div>
+    </div>
   </div>
 
   <ul class="todo-list" id="todo-list"></ul>
 
   <div class="footer">
     <span id="completed-count">0 of 0 completed</span>
-    <span>v1.0</span>
+    <span>v2.0</span>
   </div>
 
 </div>
 
 <script>
   let todos = [];
+  let filteredTodos = [];
+
+  // Dark mode functionality
+  function toggleDarkMode() {
+    const body = document.body;
+    const toggle = document.getElementById('dark-toggle');
+    body.classList.toggle('dark');
+    toggle.classList.toggle('active');
+    localStorage.setItem('darkMode', body.classList.contains('dark'));
+  }
+
+  // Load dark mode preference
+  function loadDarkMode() {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    if (darkMode) {
+      document.body.classList.add('dark');
+      document.getElementById('dark-toggle').classList.add('active');
+    }
+  }
 
   async function loadTodos() {
     const res = await fetch('/todos');
     todos = await res.json();
+    filteredTodos = [...todos];
     renderTodos();
   }
 
   async function addTodo() {
     const input = document.getElementById('todo-input');
     const prioritySelect = document.getElementById('priority-select');
+    const dueDateInput = document.getElementById('due-date-input');
     const text = input.value.trim();
     const priority = prioritySelect.value;
+    const dueDate = dueDateInput.value;
+    
     if (!text) return;
+    
+    const todoData = { text, priority };
+    if (dueDate) {
+      todoData.dueDate = dueDate;
+    }
+    
     const res = await fetch('/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, priority })
+      body: JSON.stringify(todoData)
     });
     const newTodo = await res.json();
     todos.push(newTodo);
     input.value = '';
-    renderTodos();
+    dueDateInput.value = '';
+    filterTodos();
   }
 
   async function toggleTodo(id) {
@@ -107,40 +215,58 @@
     });
     const updated = await res.json();
     todos = todos.map(t => t.id === id ? updated : t);
-    renderTodos();
+    filterTodos();
   }
 
   async function deleteTodo(id) {
     await fetch(`/todos/${id}`, { method: 'DELETE' });
     todos = todos.filter(t => t.id !== id);
+    filterTodos();
+  }
+
+  function filterTodos() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    if (searchTerm) {
+      filteredTodos = todos.filter(todo => 
+        todo.text.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      filteredTodos = [...todos];
+    }
     renderTodos();
+  }
+
+  function formatDueDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    today.setHours(0, 0, 0, 0);
+    tomorrow.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+    
+    if (date.getTime() === today.getTime()) {
+      return 'Due today';
+    } else if (date.getTime() === tomorrow.getTime()) {
+      return 'Due tomorrow';
+    } else if (date < today) {
+      return 'Overdue';
+    } else {
+      return `Due ${date.toLocaleDateString()}`;
+    }
+  }
+
+  function isOverdue(dateString) {
+    if (!dateString) return false;
+    const date = new Date(dateString);
+    const today = new Date();
+    date.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return date < today;
   }
 
   function renderTodos() {
     const list = document.getElementById('todo-list');
-    const count = document.getElementById('task-count');
-    const completed = document.getElementById('completed-count');
-
-    const done = todos.filter(t => t.done).length;
-    count.textContent = `${todos.length} task${todos.length !== 1 ? 's' : ''}`;
-    completed.textContent = `${done} of ${todos.length} completed`;
-
-    list.innerHTML = todos.map(todo => `
-      <li class="todo-item ${todo.done ? 'done' : ''}" id="todo-${todo.id}">
-        <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${todo.id})" />
-        <span class="todo-text">${todo.text}</span>
-        <span class="priority-badge ${todo.priority || 'medium'}">${(todo.priority || 'medium').charAt(0).toUpperCase() + (todo.priority || 'medium').slice(1)}</span>
-        <span class="status-badge ${todo.done ? 'done' : 'pending'}">${todo.done ? 'done' : 'pending'}</span>
-        <button class="delete-btn" onclick="deleteTodo(${todo.id})">Delete</button>
-      </li>
-    `).join('');
-  }
-
-  document.getElementById('todo-input').addEventListener('keypress', e => {
-    if (e.key === 'Enter') addTodo();
-  });
-
-  loadTodos();
-</script>
-</body>
-</html>
+    const taskCount = document.getElementById('task-count');
